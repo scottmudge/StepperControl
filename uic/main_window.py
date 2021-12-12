@@ -16,8 +16,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QDial, QGridLayout, QHBoxLayout,
-    QLabel, QMainWindow, QMenu, QMenuBar,
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
+    QMainWindow, QMenu, QMenuBar, QPlainTextEdit,
     QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
     QVBoxLayout, QWidget)
 
@@ -56,13 +56,17 @@ class Ui_MainWindow(object):
         self.titleLabel = QLabel(self.centralwidget)
         self.titleLabel.setObjectName(u"titleLabel")
         font = QFont()
-        font.setFamilies([u"Book Antiqua"])
+        font.setFamilies([u"Bahnschrift Condensed"])
         font.setPointSize(24)
         font.setBold(False)
         self.titleLabel.setFont(font)
-        self.titleLabel.setIndent(3)
+        self.titleLabel.setIndent(0)
 
         self.horizontalLayout_2.addWidget(self.titleLabel)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
@@ -76,6 +80,34 @@ class Ui_MainWindow(object):
         self.tabWidget.setObjectName(u"tabWidget")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName(u"tab_3")
+        self.gridLayout_5 = QGridLayout(self.tab_3)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.gridLayout_4 = QGridLayout()
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.plainTextEdit = QPlainTextEdit(self.tab_3)
+        self.plainTextEdit.setObjectName(u"plainTextEdit")
+        self.plainTextEdit.setMaximumSize(QSize(16777215, 24))
+
+        self.gridLayout_4.addWidget(self.plainTextEdit, 1, 1, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_4.addItem(self.verticalSpacer_2, 3, 1, 1, 1)
+
+        self.label = QLabel(self.tab_3)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_4.addWidget(self.label, 1, 0, 1, 1)
+
+
+        self.verticalLayout.addLayout(self.gridLayout_4)
+
+
+        self.gridLayout_5.addLayout(self.verticalLayout, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_4 = QWidget()
         self.tab_4.setObjectName(u"tab_4")
@@ -91,26 +123,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.label_2 = QLabel(self.tab_4)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout_3.addWidget(self.label_2, 1, 1, 1, 1)
-
-        self.dial_2 = QDial(self.tab_4)
-        self.dial_2.setObjectName(u"dial_2")
-
-        self.gridLayout_3.addWidget(self.dial_2, 1, 0, 1, 1)
-
-        self.label = QLabel(self.tab_4)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout_3.addWidget(self.label, 0, 1, 1, 1)
-
-        self.dial = QDial(self.tab_4)
-        self.dial.setObjectName(u"dial")
-
-        self.gridLayout_3.addWidget(self.dial, 0, 0, 1, 1)
-
 
         self.verticalLayout_6.addLayout(self.gridLayout_3)
 
@@ -145,7 +157,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -157,9 +169,8 @@ class Ui_MainWindow(object):
         self.actionAbout.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.iconLabel.setText("")
         self.titleLabel.setText(QCoreApplication.translate("MainWindow", u"StepperControl", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"IP Address", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Tab 1", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Tab 2", None))
         self.menuFIle.setTitle(QCoreApplication.translate("MainWindow", u"FIle", None))
     # retranslateUi
