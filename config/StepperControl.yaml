@@ -1,0 +1,21 @@
+AccelPct: !!python/object:utils.settings.Param
+  updated: false
+  value: 0.0
+DesiredPos: !!python/object:utils.settings.Param
+  updated: false
+  value: 1.0
+LastIP: !!python/object:utils.settings.Param
+  updated: true
+  value: 192.168.2.200
+MaxAccelFactor: !!python/object:utils.settings.Param
+  updated: true
+  value: 10.0
+MaxSpeedRPM: !!python/object:utils.settings.Param
+  updated: true
+  value: 2200.0
+SpeedPct: !!python/object:utils.settings.Param
+  updated: false
+  value: 1.0
+Timeout: !!python/object:utils.settings.Param
+  updated: true
+  value: 2.0

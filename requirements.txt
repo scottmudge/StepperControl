@@ -1,2 +1,6 @@
 pyqtdarktheme
 pyside6
+coloredlogs
+termcolor
+pyaml
+requests
