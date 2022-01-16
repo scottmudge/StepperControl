@@ -15,7 +15,7 @@ import utils.utility as utility
 import utils.settings as settings
 import requests
 from utils.kthread import KThread
-from time import sleep
+from time import sleep, time
 
 logger = Logging("Main")
 app = QApplication(sys.argv)
@@ -24,6 +24,11 @@ app = QApplication(sys.argv)
 def GetMainWindow():
     global window
     return window
+
+
+def GetStepper():
+    global stepper
+    return stepper
 
 
 class Configuration(settings.Config):
@@ -36,6 +41,7 @@ class Configuration(settings.Config):
         self.maxSpeed = self.add_param("MaxSpeedRPM", 500.0)
         self.maxAccel = self.add_param("MaxAccelFactor", 10.0)
         self.desiredPos = self.add_param("DesiredPos", 0.0)
+        self.want_connect = False
         self.reset_device = False
 
 
@@ -49,8 +55,8 @@ def check_ip_address(ip_str: str) -> object:
         return ip
     except ValueError:
         return None
-    
-    
+
+
 class StepperIface():
     MainURLPrefix = "update"
     DefaultPort = 8888
@@ -77,6 +83,7 @@ class StepperIface():
                 return False, "Bad resp {}".format(str(resp.status_code))
             
             self.is_connected = True
+            config.want_connect = False
             self.conn_state = "Connected"
         except Exception as e:
             if "timeout" in str(e):
@@ -130,6 +137,8 @@ class StepperIface():
                             self.conn_state = "Resp code: {}".format(resp.status_code)
                             GetMainWindow().update_connection_ui()
                     else:
+                        if config.want_connect:
+                            self.connect()
                         sleep(0.01)
                 except SystemExit:
                     self.log.info("Stop requested")
@@ -143,7 +152,7 @@ class StepperIface():
                     self.log.error("Error in ctrl loop: \n\t> {}".format(str(e)))
         finally:
             self.log.info("Thread stopped")
-            
+
 
 stepper = StepperIface()
 
@@ -189,7 +198,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.resetButton.clicked.connect(self.reset_button_action)
 
-        self.connectButton.clicked.connect(self._connect_action)        
+        self.connectButton.clicked.connect(self._connect_action)
         self.update_connection_ui()
         self.update_text_boxes()
       
@@ -290,7 +299,7 @@ window = MainWindow()
 
 if __name__ == "__main__":
     app.setStyleSheet(qdarktheme.load_stylesheet())
-    window.show()    
+    window.show()
     logger.info("Application launched.")
     app.exec()
     config.save()
