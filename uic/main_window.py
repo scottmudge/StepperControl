@@ -18,16 +18,15 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QMainWindow, QMenu,
-    QMenuBar, QPushButton, QSizePolicy, QSlider,
-    QSpacerItem, QStatusBar, QTabWidget, QVBoxLayout,
-    QWidget)
+    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.WindowModal)
-        MainWindow.resize(540, 480)
+        MainWindow.resize(580, 480)
         self.actionQuit = QAction(MainWindow)
         self.actionQuit.setObjectName(u"actionQuit")
         self.actionAbout = QAction(MainWindow)
@@ -139,64 +138,81 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.label_4, 2, 0, 1, 1)
 
-        self.timeout_LineEdit = QLineEdit(self.controlTab)
-        self.timeout_LineEdit.setObjectName(u"timeout_LineEdit")
-        self.timeout_LineEdit.setInputMethodHints(Qt.ImhFormattedNumbersOnly)
+        self.verticalSpacer_4 = QSpacerItem(20, 13, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
-        self.gridLayout_4.addWidget(self.timeout_LineEdit, 2, 1, 1, 1)
+        self.gridLayout_4.addItem(self.verticalSpacer_4, 3, 1, 1, 1)
 
         self.ipAddress_LineEdit = QLineEdit(self.controlTab)
         self.ipAddress_LineEdit.setObjectName(u"ipAddress_LineEdit")
 
         self.gridLayout_4.addWidget(self.ipAddress_LineEdit, 1, 1, 1, 1)
 
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.posPct_Slider = QSlider(self.controlTab)
-        self.posPct_Slider.setObjectName(u"posPct_Slider")
-        self.posPct_Slider.setOrientation(Qt.Horizontal)
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.negMicrostep_Button = QPushButton(self.controlTab)
+        self.negMicrostep_Button.setObjectName(u"negMicrostep_Button")
 
-        self.horizontalLayout_6.addWidget(self.posPct_Slider)
+        self.horizontalLayout_3.addWidget(self.negMicrostep_Button)
 
-        self.desiredPosPct_Label = QLabel(self.controlTab)
-        self.desiredPosPct_Label.setObjectName(u"desiredPosPct_Label")
-        self.desiredPosPct_Label.setMinimumSize(QSize(80, 0))
-        self.desiredPosPct_Label.setStyleSheet(u"QFrame {\n"
-"	border: 2px dashed rgb(54, 86, 140);\n"
-"	font: 700 11pt \"Consolas\";\n"
-"}")
-        self.desiredPosPct_Label.setAlignment(Qt.AlignCenter)
+        self.posMicrostep_Button = QPushButton(self.controlTab)
+        self.posMicrostep_Button.setObjectName(u"posMicrostep_Button")
 
-        self.horizontalLayout_6.addWidget(self.desiredPosPct_Label)
+        self.horizontalLayout_3.addWidget(self.posMicrostep_Button)
+
+        self.neg_StepButton = QPushButton(self.controlTab)
+        self.neg_StepButton.setObjectName(u"neg_StepButton")
+
+        self.horizontalLayout_3.addWidget(self.neg_StepButton)
+
+        self.posStep_Button = QPushButton(self.controlTab)
+        self.posStep_Button.setObjectName(u"posStep_Button")
+
+        self.horizontalLayout_3.addWidget(self.posStep_Button)
 
 
-        self.gridLayout_4.addLayout(self.horizontalLayout_6, 7, 1, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_4.addItem(self.verticalSpacer_2, 8, 1, 1, 1)
+        self.gridLayout_4.addLayout(self.horizontalLayout_3, 4, 1, 1, 1)
 
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.accelPct_Slider = QSlider(self.controlTab)
-        self.accelPct_Slider.setObjectName(u"accelPct_Slider")
-        self.accelPct_Slider.setOrientation(Qt.Horizontal)
+        self.microsteps_LineEdit = QLineEdit(self.controlTab)
+        self.microsteps_LineEdit.setObjectName(u"microsteps_LineEdit")
+        self.microsteps_LineEdit.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_5.addWidget(self.accelPct_Slider)
+        self.horizontalLayout_5.addWidget(self.microsteps_LineEdit)
 
-        self.curAccelPct_Label = QLabel(self.controlTab)
-        self.curAccelPct_Label.setObjectName(u"curAccelPct_Label")
-        self.curAccelPct_Label.setMinimumSize(QSize(80, 0))
-        self.curAccelPct_Label.setStyleSheet(u"QFrame {\n"
-"	border: 2px dashed rgb(54, 86, 140);\n"
-"	font: 700 11pt \"Consolas\";\n"
-"}")
-        self.curAccelPct_Label.setAlignment(Qt.AlignCenter)
+        self.microsteps_Button = QPushButton(self.controlTab)
+        self.microsteps_Button.setObjectName(u"microsteps_Button")
 
-        self.horizontalLayout_5.addWidget(self.curAccelPct_Label)
+        self.horizontalLayout_5.addWidget(self.microsteps_Button)
+
+        self.steps_LineEdit = QLineEdit(self.controlTab)
+        self.steps_LineEdit.setObjectName(u"steps_LineEdit")
+        self.steps_LineEdit.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_5.addWidget(self.steps_LineEdit)
+
+        self.steps_Button = QPushButton(self.controlTab)
+        self.steps_Button.setObjectName(u"steps_Button")
+
+        self.horizontalLayout_5.addWidget(self.steps_Button)
 
 
         self.gridLayout_4.addLayout(self.horizontalLayout_5, 5, 1, 1, 1)
+
+        self.label_7 = QLabel(self.controlTab)
+        self.label_7.setObjectName(u"label_7")
+
+        self.gridLayout_4.addWidget(self.label_7, 6, 0, 1, 1)
+
+        self.timeout_LineEdit = QLineEdit(self.controlTab)
+        self.timeout_LineEdit.setObjectName(u"timeout_LineEdit")
+        self.timeout_LineEdit.setInputMethodHints(Qt.ImhFormattedNumbersOnly)
+
+        self.gridLayout_4.addWidget(self.timeout_LineEdit, 2, 1, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_4.addItem(self.verticalSpacer_2, 7, 1, 1, 1)
 
         self.label_6 = QLabel(self.controlTab)
         self.label_6.setObjectName(u"label_6")
@@ -211,54 +227,63 @@ class Ui_MainWindow(object):
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.gridLayout_4.addItem(self.verticalSpacer_3, 8, 0, 1, 1)
+        self.gridLayout_4.addItem(self.verticalSpacer_3, 7, 0, 1, 1)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.degrees_LineEdit = QLineEdit(self.controlTab)
+        self.degrees_LineEdit.setObjectName(u"degrees_LineEdit")
+        self.degrees_LineEdit.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_6.addWidget(self.degrees_LineEdit)
+
+        self.degrees_Button = QPushButton(self.controlTab)
+        self.degrees_Button.setObjectName(u"degrees_Button")
+
+        self.horizontalLayout_6.addWidget(self.degrees_Button)
+
+
+        self.gridLayout_4.addLayout(self.horizontalLayout_6, 6, 1, 1, 1)
 
         self.label_5 = QLabel(self.controlTab)
         self.label_5.setObjectName(u"label_5")
 
         self.gridLayout_4.addWidget(self.label_5, 4, 0, 1, 1)
 
-        self.verticalSpacer_5 = QSpacerItem(20, 13, QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.label_8 = QLabel(self.controlTab)
+        self.label_8.setObjectName(u"label_8")
 
-        self.gridLayout_4.addItem(self.verticalSpacer_5, 6, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.label_8, 8, 0, 1, 1)
 
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.speedPct_Slider = QSlider(self.controlTab)
-        self.speedPct_Slider.setObjectName(u"speedPct_Slider")
-        self.speedPct_Slider.setOrientation(Qt.Horizontal)
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.label_9 = QLabel(self.controlTab)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setFrameShape(QFrame.NoFrame)
 
-        self.horizontalLayout_3.addWidget(self.speedPct_Slider)
+        self.horizontalLayout_8.addWidget(self.label_9)
 
-        self.curSpeedPcnt_Label = QLabel(self.controlTab)
-        self.curSpeedPcnt_Label.setObjectName(u"curSpeedPcnt_Label")
-        self.curSpeedPcnt_Label.setMinimumSize(QSize(80, 0))
-        self.curSpeedPcnt_Label.setStyleSheet(u"QFrame {\n"
-"	border: 2px dashed rgb(54, 86, 140);\n"
-"	font: 700 11pt \"Consolas\";\n"
-"}")
-        self.curSpeedPcnt_Label.setFrameShape(QFrame.Box)
-        self.curSpeedPcnt_Label.setLineWidth(2)
-        self.curSpeedPcnt_Label.setAlignment(Qt.AlignCenter)
+        self.lineEdit = QLineEdit(self.controlTab)
+        self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setAlignment(Qt.AlignCenter)
+        self.lineEdit.setReadOnly(True)
 
-        self.horizontalLayout_3.addWidget(self.curSpeedPcnt_Label)
+        self.horizontalLayout_8.addWidget(self.lineEdit)
+
+        self.label_10 = QLabel(self.controlTab)
+        self.label_10.setObjectName(u"label_10")
+
+        self.horizontalLayout_8.addWidget(self.label_10)
+
+        self.lineEdit_2 = QLineEdit(self.controlTab)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.lineEdit_2.setAlignment(Qt.AlignCenter)
+        self.lineEdit_2.setReadOnly(True)
+
+        self.horizontalLayout_8.addWidget(self.lineEdit_2)
 
 
-        self.gridLayout_4.addLayout(self.horizontalLayout_3, 4, 1, 1, 1)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 13, QSizePolicy.Minimum, QSizePolicy.Fixed)
-
-        self.gridLayout_4.addItem(self.verticalSpacer_4, 3, 1, 1, 1)
-
-        self.label_7 = QLabel(self.controlTab)
-        self.label_7.setObjectName(u"label_7")
-
-        self.gridLayout_4.addWidget(self.label_7, 7, 0, 1, 1)
-
-        self.wearIn_Button = QPushButton(self.controlTab)
-        self.wearIn_Button.setObjectName(u"wearIn_Button")
-
-        self.gridLayout_4.addWidget(self.wearIn_Button, 9, 1, 1, 1)
+        self.gridLayout_4.addLayout(self.horizontalLayout_8, 8, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.gridLayout_4)
@@ -354,7 +379,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 540, 22))
+        self.menuBar.setGeometry(QRect(0, 0, 580, 22))
         self.menuFIle = QMenu(self.menuBar)
         self.menuFIle.setObjectName(u"menuFIle")
         MainWindow.setMenuBar(self.menuBar)
@@ -400,19 +425,27 @@ class Ui_MainWindow(object):
         self.connectButton.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Timeout (s)", None))
 #if QT_CONFIG(statustip)
-        self.timeout_LineEdit.setStatusTip(QCoreApplication.translate("MainWindow", u"Timeout for connection requests (seconds)", None))
-#endif // QT_CONFIG(statustip)
-#if QT_CONFIG(statustip)
         self.ipAddress_LineEdit.setStatusTip(QCoreApplication.translate("MainWindow", u"IP address of motor (no port)", None))
 #endif // QT_CONFIG(statustip)
-        self.desiredPosPct_Label.setText(QCoreApplication.translate("MainWindow", u"0%", None))
-        self.curAccelPct_Label.setText(QCoreApplication.translate("MainWindow", u"0%", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Acceleration", None))
+        self.negMicrostep_Button.setText(QCoreApplication.translate("MainWindow", u"+ \u00b5Step", None))
+        self.posMicrostep_Button.setText(QCoreApplication.translate("MainWindow", u"- \u00b5Step", None))
+        self.neg_StepButton.setText(QCoreApplication.translate("MainWindow", u"- Step", None))
+        self.posStep_Button.setText(QCoreApplication.translate("MainWindow", u"+ Step", None))
+        self.microsteps_Button.setText(QCoreApplication.translate("MainWindow", u"\u00b5Step", None))
+        self.steps_Button.setText(QCoreApplication.translate("MainWindow", u"Step", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Move (deg)", None))
+#if QT_CONFIG(statustip)
+        self.timeout_LineEdit.setStatusTip(QCoreApplication.translate("MainWindow", u"Timeout for connection requests (seconds)", None))
+#endif // QT_CONFIG(statustip)
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Stepping", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"IP Address", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Speed", None))
-        self.curSpeedPcnt_Label.setText(QCoreApplication.translate("MainWindow", u"0%", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Desired Position", None))
-        self.wearIn_Button.setText(QCoreApplication.translate("MainWindow", u"Start Wear In", None))
+        self.degrees_LineEdit.setInputMask("")
+        self.degrees_LineEdit.setText("")
+        self.degrees_Button.setText(QCoreApplication.translate("MainWindow", u"Degrees", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Single Stepping", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Data", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Current Deg:", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Target Deg:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.controlTab), QCoreApplication.translate("MainWindow", u"Control", None))
 #if QT_CONFIG(statustip)
         self.settingsTab.setStatusTip("")
