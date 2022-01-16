@@ -1,9 +1,6 @@
 AccelPct: !!python/object:utils.settings.Param
   updated: false
-  value: 0.2828282828282828
-DesiredPos: !!python/object:utils.settings.Param
-  updated: false
-  value: 0.0
+  value: 0.06060606060606061
 LastIP: !!python/object:utils.settings.Param
   updated: true
   value: 192.168.2.200
@@ -13,9 +10,21 @@ MaxAccelFactor: !!python/object:utils.settings.Param
 MaxSpeedRPM: !!python/object:utils.settings.Param
   updated: true
   value: 2000.0
+NumDegrees: !!python/object:utils.settings.Param
+  updated: true
+  value: -720.0
+NumMicrosteps: !!python/object:utils.settings.Param
+  updated: true
+  value: -8
+NumSteps: !!python/object:utils.settings.Param
+  updated: true
+  value: 10
 SpeedPct: !!python/object:utils.settings.Param
   updated: false
-  value: 0.020202020202020204
+  value: 0.06060606060606061
+SyncPeriod: !!python/object:utils.settings.Param
+  updated: true
+  value: 0.6
 Timeout: !!python/object:utils.settings.Param
   updated: true
   value: 2.0

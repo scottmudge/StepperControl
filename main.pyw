@@ -3,7 +3,7 @@ from PySide6 import QtWidgets
 import PySide6
 from uic.main_window import Ui_MainWindow
 from PySide6.QtWidgets import QApplication, QWidget
-from PySide6.QtGui import QDoubleValidator, QIcon, QPixmap, QImage, QPicture
+from PySide6.QtGui import QDoubleValidator, QIntValidator, QIcon, QPixmap, QImage, QPicture
 from PySide6.QtCore import Qt, SIGNAL
 import qdarktheme
 from resources import MainIcon
@@ -40,9 +40,25 @@ class Configuration(settings.Config):
         self.accelPct = self.add_param("AccelPct", 0.2)
         self.maxSpeed = self.add_param("MaxSpeedRPM", 500.0)
         self.maxAccel = self.add_param("MaxAccelFactor", 10.0)
-        self.desiredPos = self.add_param("DesiredPos", 0.0)
+        self.syncPeriod = self.add_param("SyncPeriod", 0.6)
         self.want_connect = False
         self.reset_device = False
+        
+        self.singleMicrostep = False
+        self.singleMicrostepPos = True
+        self.singleStep = False
+        self.singleStepPos = True
+        self.microstep = False
+        self.step = False
+        self.degrees = False
+                
+        self.numMicrosteps = self.add_param("NumMicrosteps", 0)
+        self.numSteps = self.add_param("NumSteps", 0)
+        
+        self.numDegrees = self.add_param("NumDegrees", 0.0)
+        self.cur_deg = 0.0
+        self.target_deg = 0.0
+                                          
 
 
 config = Configuration()
@@ -65,6 +81,7 @@ class StepperIface():
         self.is_connected = False
         self.conn_state: str = "Disconnected"
         self._pct_open = 0.0
+        self._send_time = time()
         
         self._run_thread = KThread(name="StepperThread", target=self.thread_func)
         self._run_thread.start()
@@ -113,20 +130,47 @@ class StepperIface():
                             config.accelPct.reset_updated()
                             data["Accel"] = "{:.2f}".format(config.accelPct.value * config.maxAccel.value)
                             
-                        if config.desiredPos.updated:
-                            config.desiredPos.reset_updated()
-                            data["TgtPct"] = "{:.2f}".format(config.desiredPos.value * 100.0)
-                            
                         if config.reset_device:
                             config.reset_device = False
                             data["Reset"] = "1"        
                             self.is_connected = False
                             self.conn_state = "Reset"
                             GetMainWindow().update_connection_ui()
+                            
+                        if config.singleMicrostep:
+                            if config.singleMicrostepPos:
+                                data["Ustep"] = "%d"%1
+                            else:
+                                data["Ustep"] = "%d"%-1
+                            config.singleMicrostep = False
+                            
+                        if config.singleStep:
+                            if config.singleStepPos:
+                                data["Step"] = "%d"%1
+                            else:
+                                data["Step"] = "%d"%-11
+                            config.singleStep = False
+                            
+                        if config.degrees:
+                            data["Move"] = "%.4f"%config.numDegrees.value
+                            config.degrees = False
+                            
+                        if config.step:
+                            data["Step"] = "%d"%config.numSteps.value
+                            config.step = False
+                            
+                        if config.microstep:
+                            data["Ustep"] = "%d"%config.numMicrosteps.value
+                            config.microstep = False
+                            
+                        new_time = time()
+                        elapsed = new_time - self._send_time
 
-                        if len(data) < 1:
+                        if len(data) < 1 and elapsed < config.syncPeriod.value:
                             sleep(0.01)
                             continue
+                        
+                        self._send_time = new_time
 
                         # add data like data["SetCurPcnt"] = 1.0
                         #print(self._get_url())
@@ -136,6 +180,27 @@ class StepperIface():
                             self.is_connected = False
                             self.conn_state = "Resp code: {}".format(resp.status_code)
                             GetMainWindow().update_connection_ui()
+                            
+                        update_text = False
+                        
+                        vals = resp.text.split()
+                        if len(vals) < 2:
+                            self.log.warn("Unexpected number of response values")
+                        else:
+                            for i, st in enumerate(vals):
+                                val = float(st)
+                                if i == 0:
+                                    if abs(val - config.cur_deg) > 0.001:
+                                        update_text = True
+                                    config.cur_deg = val
+                                elif i == 1:
+                                    if abs(val - config.target_deg) > 0.001:
+                                        update_text = True
+                                    config.target_deg = val
+                        
+                        if update_text:
+                            GetMainWindow().update_text_boxes()
+                        
                     else:
                         if config.want_connect:
                             self.connect()
@@ -181,6 +246,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.timeout_LineEdit.setText(str(config.timeout.value))
         self.timeout_edit_action(str(config.timeout.value))
         
+        self.syncPeriod_LineEdit.textChanged[str].connect(self.syncPeriod_edit_action)
+        self.syncPeriod_LineEdit.setValidator(QDoubleValidator(0.0, 5.0, 3, self))
+        self.syncPeriod_LineEdit.setText(str(config.syncPeriod.value))
+        
         self.speedPct_Slider.setValue(self.pct_to_slider(config.speedPct.value))
         self.speedPct_Slider.valueChanged[int].connect(self.speed_changed_action)
         
@@ -192,15 +261,82 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.maxSpeed_LineEdit.setText(str(config.maxSpeed.value))
         self.maxSpeed_LineEdit.textChanged[str].connect(self.max_speed_edit_action)
-        
-        self.posPct_Slider.setValue(self.pct_to_slider(config.desiredPos.value))
-        self.posPct_Slider.valueChanged[int].connect(self.position_changed_action)
 
         self.resetButton.clicked.connect(self.reset_button_action)
+        
+        self.posMicrostep_Button.clicked.connect(self.posMicrostep_action)
+        self.negMicrostep_Button.clicked.connect(self.negMicrostep_action)
+        self.posStep_Button.clicked.connect(self.posStep_action)
+        self.neg_StepButton.clicked.connect(self.negStep_action)
+        
+        self.steps_LineEdit.textChanged[str].connect(self.step_edit_action)
+        self.microsteps_LineEdit.textChanged[str].connect(self.microstep_edit_action)
+        self.degrees_LineEdit.textChanged[str].connect(self.degrees_edit_action)
+        
+        self.degrees_LineEdit.setValidator(QDoubleValidator(-360.0 * 60, 360.0 * 60, 3, self))
+        self.microsteps_LineEdit.setValidator(QIntValidator(-200 * 60 * 8, 200 * 60 * 8, self))
+        self.steps_LineEdit.setValidator(QIntValidator(-200 * 60, 200 * 60, self))
+        
+        self.microsteps_Button.clicked.connect(self.microstep_button_action)
+        self.steps_Button.clicked.connect(self.step_button_action)
+        self.degrees_Button.clicked.connect(self.deg_move_button_action)
 
         self.connectButton.clicked.connect(self._connect_action)
         self.update_connection_ui()
         self.update_text_boxes()
+        
+    @staticmethod
+    def microstep_button_action():
+        config.microstep = True
+    
+    @staticmethod
+    def step_button_action():
+        config.step = True
+    
+    @staticmethod
+    def deg_move_button_action():
+        config.degrees = True
+        
+    @staticmethod
+    def step_edit_action(val: str):
+        try:
+            config.numSteps.value = int(val)
+        except Exception:
+            pass
+        
+    @staticmethod
+    def microstep_edit_action(val: str):
+        try:
+            config.numMicrosteps.value = int(val)
+        except Exception:
+            pass
+    
+    @staticmethod
+    def degrees_edit_action(val: str):
+        try:
+            config.numDegrees.value = float(val)
+        except Exception:
+            pass
+    
+    @staticmethod    
+    def posMicrostep_action():
+        config.singleMicrostepPos = True
+        config.singleMicrostep = True
+    
+    @staticmethod    
+    def negMicrostep_action():
+        config.singleMicrostepPos = False
+        config.singleMicrostep = True
+      
+    @staticmethod   
+    def posStep_action():
+        config.singleStepPos = True
+        config.singleStep = True
+    
+    @staticmethod    
+    def negStep_action():
+        config.singleStepPos = False
+        config.singleStep = True
       
     @staticmethod
     def quit_action():
@@ -234,14 +370,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         config.accelPct.set_to(self.slider_to_pct(val))
         self.update_text_boxes()
         
-    def position_changed_action(self, val: int):
-        config.desiredPos.set_to(self.slider_to_pct(val))
-        self.update_text_boxes()
-        
     def update_text_boxes(self):
         self.curSpeedPcnt_Label.setText("{}%".format(int(round(config.speedPct.value * 100.0))))
         self.curAccelPct_Label.setText("{}%".format(int(round(config.accelPct.value* 100.0))))
-        self.desiredPosPct_Label.setText("{}%".format(int(round(config.desiredPos.value * 100.0))))
+        self.microsteps_LineEdit.setText("{}".format(int(config.numMicrosteps.value)))
+        self.steps_LineEdit.setText("{}".format(int(config.numSteps.value)))
+        self.steps_LineEdit.setText("{}".format(int(config.numSteps.value)))
+        self.degrees_LineEdit.setText("%.3f"%config.numDegrees.value)
+        
+        self.curDeg_LineEdit.setText("%.3f"%config.cur_deg)
+        self.targetDeg_LineEdit.setText("%.3f"%config.target_deg)
         
     def generate_icons(self):
         """Generates icons for window."""
@@ -266,6 +404,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     @staticmethod
     def timeout_edit_action(text: str):
         config.timeout.set_to(float(text))
+        
+    @staticmethod
+    def syncPeriod_edit_action(text: str):
+        config.syncPeriod.set_to(float(text))
 
     def ip_address_edit_action(self, text: str):
         ip = check_ip_address(text)
@@ -304,5 +446,6 @@ if __name__ == "__main__":
     app.exec()
     config.save()
     stepper.kill()
+
 
 
